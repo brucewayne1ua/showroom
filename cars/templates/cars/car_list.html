@@ -1,0 +1,46 @@
+<form method="get">
+  <input
+    type="text"
+    name="q"
+    placeholder="Поиск..."
+    value="{{ request.GET.q|default:'' }}"
+  />
+
+  <select name="brand">
+    <option value="">Все бренды</option>
+    {% for b in brands %} {% if request.GET.brand == b.id|stringformat:"s" %}
+    <option value="{{ b.id }}" selected>{{ b.name }}</option>
+    {% else %}
+    <option value="{{ b.id }}">{{ b.name }}</option>
+    {% endif %} {% endfor %}
+  </select>
+
+  <button type="submit">Найти</button>
+</form>
+
+<hr />
+
+<ul>
+  {% for car in cars %}
+  <li>
+    <a href="{% url 'cars:car_detail' car.pk %}">
+      {{ car.brand.name }} {{ car.model }} — {{ car.year }} — {{ car.price }}
+      грн
+    </a>
+  </li>
+  {% empty %}
+  <li>Нет машин</li>
+  {% endfor %}
+</ul>
+
+<div>
+  {% if cars.has_previous %}
+  <a href="?page={{ cars.previous_page_number }}">Предыдущая</a>
+  {% endif %}
+
+  <span>Страница {{ cars.number }} из {{ cars.paginator.num_pages }}</span>
+
+  {% if cars.has_next %}
+  <a href="?page={{ cars.next_page_number }}">Следующая</a>
+  {% endif %}
+</div>
