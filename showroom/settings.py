@@ -16,7 +16,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # наше приложение
+    "user",
     "cars",
     # rest api если будешь подключать
     "rest_framework",

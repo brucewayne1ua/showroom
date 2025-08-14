@@ -1,46 +1,47 @@
-<form method="get">
-  <input
-    type="text"
-    name="q"
-    placeholder="Поиск..."
-    value="{{ request.GET.q|default:'' }}"
-  />
-
+<form method="get" class="mb-4">
+  <input type="text" name="q" placeholder="Поиск..." value="{{ request.GET.q|default:'' }}">
   <select name="brand">
     <option value="">Все бренды</option>
-    {% for b in brands %} {% if request.GET.brand == b.id|stringformat:"s" %}
-    <option value="{{ b.id }}" selected>{{ b.name }}</option>
-    {% else %}
-    <option value="{{ b.id }}">{{ b.name }}</option>
-    {% endif %} {% endfor %}
+    {% for b in brands %}
+      <option value="{{ b.id }}" {% if request.GET.brand == b.id|stringformat:"s" %}selected{% endif %}>
+        {{ b.name }}
+      </option>
+    {% endfor %}
   </select>
-
   <button type="submit">Найти</button>
 </form>
 
-<hr />
-
-<ul>
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
   {% for car in cars %}
-  <li>
-    <a href="{% url 'cars:car_detail' car.pk %}">
-      {{ car.brand.name }} {{ car.model }} — {{ car.year }} — {{ car.price }}
-      грн
-    </a>
-  </li>
+    <div style="border: 1px solid #ddd; border-radius: 6px; width: 300px; overflow: hidden;">
+      <a href="{% url 'cars:car_detail' car.pk %}" style="text-decoration: none; color: inherit;">
+        {% if car.photos.first %}
+          <img src="{{ car.photos.first.image.url }}" alt="{{ car.photos.first.alt|default:car.model }}" style="width: 100%; height: 200px; object-fit: cover;">
+        {% else %}
+          <div style="width: 100%; height: 200px; background: #eee; display: flex; align-items: center; justify-content: center;">
+            Нет фото
+          </div>
+        {% endif %}
+        <div style="padding: 10px;">
+          <h3>{{ car.brand.name }} {{ car.model }}</h3>
+          <p>{{ car.year }} — {{ car.price }} грн</p>
+          <small>Пробег: {{ car.mileage|default:"—" }} км</small>
+        </div>
+      </a>
+    </div>
   {% empty %}
-  <li>Нет машин</li>
+    <p>Нет машин</p>
   {% endfor %}
-</ul>
+</div>
 
-<div>
+<div style="margin-top: 20px;">
   {% if cars.has_previous %}
-  <a href="?page={{ cars.previous_page_number }}">Предыдущая</a>
+    <a href="?page={{ cars.previous_page_number }}">Предыдущая</a>
   {% endif %}
 
   <span>Страница {{ cars.number }} из {{ cars.paginator.num_pages }}</span>
 
   {% if cars.has_next %}
-  <a href="?page={{ cars.next_page_number }}">Следующая</a>
+    <a href="?page={{ cars.next_page_number }}">Следующая</a>
   {% endif %}
 </div>
