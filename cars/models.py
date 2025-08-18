@@ -1,10 +1,5 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.conf import settings  
 
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -12,6 +7,7 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Car(models.Model):
     STATUS_CHOICES = [
@@ -27,11 +23,22 @@ class Car(models.Model):
     mileage = models.PositiveIntegerField(null=True, blank=True)
     description = models.TextField(blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='available')
+
+    
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="owned_cars"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.brand.name} {self.model} ({self.year})"
+
 
 class CarPhoto(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='photos')
@@ -41,9 +48,10 @@ class CarPhoto(models.Model):
     def __str__(self):
         return f"Photo {self.car} #{self.pk}"
 
+
 class Order(models.Model):
     car = models.ForeignKey(Car, on_delete=models.PROTECT, related_name='orders')
-    buyer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     phone = models.CharField(max_length=30)
     email = models.EmailField(blank=True)
     message = models.TextField(blank=True)

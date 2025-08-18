@@ -3,6 +3,7 @@ from .models import Car, Brand
 from .forms import OrderForm, CarForm
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 def car_list(request):
     qs = Car.objects.filter(status='available').select_related('brand')
@@ -37,11 +38,14 @@ def car_detail(request, pk):
 def order_thanks(request):
     return render(request, 'cars/order_thanks.html')
 
+@login_required
 def car_add(request):
     if request.method == 'POST':
         form = CarForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            car = form.save(commit=False)
+            car.owner = request.user  # привязываем авто к авторизованному юзеру
+            car.save()
             return redirect('cars:car_list')
     else:
         form = CarForm()

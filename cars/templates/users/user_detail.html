@@ -1,18 +1,4 @@
-<h2>Профиль пользователя</h2>
-
-<p><strong>Имя:</strong> {{ user.first_name }}</p>
-<p><strong>Фамилия:</strong> {{ user.last_name }}</p>
-<p><strong>Телефон:</strong> {{ user.phone_number }}</p>
-
-{% if user.cars.all %}
-<p><strong>Машины пользователя:</strong></p>
-<ul>
-  {% for car in user.cars.all %}
-  <li>{{ car.brand }} {{ car.model }} ({{ car.year }})</li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>У пользователя нет машин.</p>
-{% endif %}
-
-<a href="{% url 'user_list' %}">Назад к списку пользователей</a>
+<h2>{{ user.first_name }} {{ user.last_name }}</h2>
+<p>Phone: {{ user.phone_number }}</p>
+<a href="{% url 'edit_user' user.id %}">Edit</a>
+<a href="{% url 'delete_user' user.id %}">Delete</a>

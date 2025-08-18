@@ -1,6 +1,6 @@
-<h2>Регистрация пользователя</h2>
-<form method="POST">
+<h2>Register</h2>
+<form method="post">
   {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Сохранить</button>
+  <button type="submit">Register</button>
 </form>
-<a href="{% url 'user_list' %}">Назад к списку</a>
+<a href="{% url 'login_user' %}">Login</a>

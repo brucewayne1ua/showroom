@@ -1,3 +1,12 @@
+{% if user.is_authenticated %}
+  <div style="margin-bottom: 20px;">
+    <a href="{% url 'cars:car_add' %}" style="padding: 8px 12px; background: #4CAF50; color: white; text-decoration: none; border-radius: 4px;">
+      Добавить авто
+    </a>
+  </div>
+{% endif %}
+
+
 <form method="get" class="mb-4">
   <input type="text" name="q" placeholder="Поиск..." value="{{ request.GET.q|default:'' }}">
   <select name="brand">
