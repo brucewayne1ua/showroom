@@ -54,6 +54,7 @@
           <p><strong>Цена:</strong> ${{ car.price }}</p>
           <p><strong>Пробег:</strong> {{ car.mileage|default:"—" }} км</p>
           <p><strong>Статус:</strong> {{ car.get_status_display }}</p>
+          <p><strong>Продавец:</strong>{{car.owner}}</p>
           {% if car.description %}
           <p class="mt-3">{{ car.description }}</p>
           {% endif %}
