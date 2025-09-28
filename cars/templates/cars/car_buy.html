@@ -1,2 +1,101 @@
-#Дописать код для покупки, нужно чтобы высвечивался номер и предложение
-позвонить
+<h1>{{ car.brand.name }} {{ car.model }} — {{ car.year }}</h1>
+<p>Ціна: {{ car.price }} грн</p>
+<p>Пробіг: {{ car.mileage|default:"—" }} км</p>
+<p>{{ car.description }}</p>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+  {% for photo in car.photos.all %}
+  <img
+    src="{{ photo.image.url }}"
+    alt="{{ photo.alt|default:car.model }}"
+    style="width: 300px; height: 200px; object-fit: cover"
+  />
+  {% empty %}
+  <p>Немає фото</p>
+  {% endfor %}
+</div>
+
+<hr />
+
+<!-- Кнопка -->
+<button
+  id="orderBtn"
+  style="
+    padding: 10px 15px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  "
+>
+  Оформити замовлення
+</button>
+
+<!-- Модалка -->
+<div
+  id="orderModal"
+  style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+  "
+>
+  <div
+    style="
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+      position: relative;
+    "
+  >
+    <span
+      id="closeModal"
+      style="
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+        font-weight: bold;
+      "
+      >✖</span
+    >
+    <h2>Зв’язатися з продавцем</h2>
+    <p>📞 Телефон: <a href="tel:+380991112233">+38 (099) 111-22-33</a></p>
+    <p>
+      <a
+        href="https://wa.me/380991112233"
+        target="_blank"
+        style="color: green; font-weight: bold"
+      >
+        💬 Написати у WhatsApp
+      </a>
+    </p>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('orderModal');
+  const btn = document.getElementById('orderBtn');
+  const close = document.getElementById('closeModal');
+
+  btn.onclick = function () {
+    modal.style.display = 'flex';
+  };
+  close.onclick = function () {
+    modal.style.display = 'none';
+  };
+  window.onclick = function (e) {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  };
+</script>

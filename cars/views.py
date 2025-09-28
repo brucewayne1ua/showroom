@@ -38,6 +38,10 @@ def car_detail(request, pk):
 def order_thanks(request):
     return render(request, 'cars/order_thanks.html')
 
+def car_buy(request, pk):
+    car = get_object_or_404(Car, pk = pk)
+    return render(request, 'cars/car_buy.html', {'car': car})
+
 @login_required
 def car_add(request):
     if request.method == 'POST':
