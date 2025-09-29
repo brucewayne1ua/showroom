@@ -1,0 +1,61 @@
+{% load static %} {% for car in cars %}
+<div class="col-md-4">
+  <div class="card h-100 shadow-sm">
+    {% if car.photos.first %}
+    <img
+      src="{{ car.photos.first.image.url }}"
+      class="card-img-top"
+      alt="{{ car.model }}"
+    />
+    {% else %}
+    <img
+      src="{% static 'no-photo.png' %}"
+      class="card-img-top"
+      alt="Нет фото"
+    />
+    {% endif %}
+    <div class="card-body">
+      <h5 class="card-title">{{ car.brand.name }} {{ car.model }}</h5>
+      <p class="card-text mb-1"><strong>Цена:</strong> {{ car.price }} грн</p>
+      <p class="card-text"><strong>Год:</strong> {{ car.year }}</p>
+      <a
+        href="{% url 'cars:car_detail' car.id %}"
+        class="btn btn-outline-primary btn-sm"
+        >Подробнее</a
+      >
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="col-12">
+  <div class="alert alert-warning">Ничего не найдено</div>
+</div>
+{% endfor %}
+
+<div class="col-12 mt-3">
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if cars.has_previous %}
+      <li class="page-item">
+        <a
+          class="page-link ajax-page"
+          href="?page={{ cars.previous_page_number }}"
+          >Назад</a
+        >
+      </li>
+      {% endif %}
+      <li class="page-item disabled">
+        <span class="page-link"
+          >Страница {{ cars.number }} из {{ cars.paginator.num_pages }}</span
+        >
+      </li>
+      {% if cars.has_next %}
+      <li class="page-item">
+        <a class="page-link ajax-page" href="?page={{ cars.next_page_number }}"
+          >Вперёд</a
+        >
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
