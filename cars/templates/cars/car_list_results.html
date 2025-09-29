@@ -16,7 +16,7 @@
     {% endif %}
     <div class="card-body">
       <h5 class="card-title">{{ car.brand.name }} {{ car.model }}</h5>
-      <p class="card-text mb-1"><strong>Цена:</strong> {{ car.price }} грн</p>
+      <p class="card-text mb-1"><strong>Цена:</strong> {{ car.price }} EUR</p>
       <p class="card-text"><strong>Год:</strong> {{ car.year }}</p>
       <a
         href="{% url 'cars:car_detail' car.id %}"
