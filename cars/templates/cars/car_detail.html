@@ -1,121 +1,120 @@
-<!DOCTYPE html>
-<html lang="uk">
-  <head>
-    <meta charset="UTF-8" />
-    <title>{{ car.brand.name }} {{ car.model }}</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      .carousel-inner img {
-        height: 450px;
-        object-fit: cover;
-      }
-    </style>
-  </head>
-  <body class="bg-light">
-    <div class="container mt-4">
-      <a href="{% url 'car_list' %}" class="btn btn-secondary mb-3">← Назад</a>
+{% extends "base.html" %} {% block title %}{{ car.brand.name }} {{ car.model
+}}{% endblock %} {% block extra_head %}
+<style>
+  .carousel-inner img {
+    height: 450px;
+    object-fit: cover;
+  }
+</style>
+{% endblock %} {% block content %}
+<a href="{% url 'cars:car_list' %}" class="btn btn-secondary mb-3">← Назад</a>
 
-      <div class="card shadow-sm mx-auto" style="max-width: 65%">
-        {% if car.photos.all %}
-        <div id="carPhotos" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            {% for photo in car.photos.all %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-              <img
-                src="{{ photo.image.url }}"
-                class="d-block w-100"
-                alt="{{ photo.alt|default:car.model }}"
-              />
-            </div>
-            {% endfor %}
-          </div>
-          {% if car.photos.count > 1 %}
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carPhotos"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carPhotos"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon"></span>
-          </button>
-          {% endif %}
-        </div>
-        {% endif %}
-
-        <div class="card-body">
-          <h2 class="card-title">
-            {{ car.brand.name }} {{ car.model }} ({{ car.year }})
-          </h2>
-          <p><strong>Price:</strong> {{ car.price }} EUR</p>
-          <p><strong>Mileage:</strong> {{ car.mileage|default:"—" }} км</p>
-          <p><strong>Status:</strong> {{ car.get_status_display }}</p>
-          <p><strong>Owner:</strong> {{ car.owner }}</p>
-          {% if car.description %}
-          <p class="mt-3">{{ car.description }}</p>
-          {% endif %}
-
-          <div class="mt-4 text-center">
-            <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#orderModal"
-            >
-              Оформити замовлення
-            </button>
-          </div>
-        </div>
+<div class="card shadow-sm mx-auto" style="max-width: 65%">
+  {% if car.photos.all %}
+  <div id="carPhotos" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      {% for photo in car.photos.all %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img
+          src="{{ photo.image.url }}"
+          class="d-block w-100"
+          alt="{{ photo.alt|default:car.model }}"
+        />
       </div>
+      {% endfor %}
     </div>
-
-    <div
-      class="modal fade"
-      id="orderModal"
-      tabindex="-1"
-      aria-labelledby="orderModalLabel"
-      aria-hidden="true"
+    {% if car.photos.count > 1 %}
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carPhotos"
+      data-bs-slide="prev"
     >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="orderModalLabel">
-              Зв’язатися з продавцем
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Закрити"
-            ></button>
-          </div>
-          <div class="modal-body text-center">
-            <p>
-              📞 Телефон: <a href="tel:+380991112233">+38 (099) 111-22-33</a>
-            </p>
-            <p>
-              <a
-                href="https://wa.me/380991112233"
-                target="_blank"
-                class="btn btn-success"
-                >Написати у WhatsApp</a
-              >
-            </p>
-          </div>
-        </div>
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carPhotos"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon"></span>
+    </button>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="card-body">
+    <h2 class="card-title">
+      {{ car.brand.name }} {{ car.model }} ({{ car.year }})
+    </h2>
+    <p><strong>Price:</strong> {{ car.price }} EUR</p>
+    <p><strong>Mileage:</strong> {{ car.mileage|default:"—" }} км</p>
+    <p><strong>Status:</strong> {{ car.get_status_display }}</p>
+    <p>
+      <strong>Owner:</strong>
+      <!-- {{ car.owner.first_name }} {{ car.owner.last_name
+      }} -->
+      ({{ car.owner.phone_number }})
+    </p>
+    {% if car.description %}
+    <p class="mt-3">{{ car.description }}</p>
+    {% endif %}
+
+    <div class="mt-4 text-center">
+      {% if user.is_authenticated %}
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#orderModal"
+      >
+        Оформити замовлення
+      </button>
+      {% else %}
+      <a href="{% url 'login_user' %}" class="btn btn-warning">
+        Увійдіть, щоб оформити замовлення
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if user.is_authenticated %}
+<div
+  class="modal fade"
+  id="orderModal"
+  tabindex="-1"
+  aria-labelledby="orderModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderModalLabel">Зв’язатися з продавцем</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Закрити"
+        ></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>
+          📞 Телефон:
+          <a href="tel:{{ car.owner.phone_number }}"></a>
+        </p>
+        <p>
+          <a
+            href="https://wa.me/{{ car.owner.phone_number|cut:'+' }}?text=Добрий%20день,%20мене%20цікавить%20ваше%20авто%20{{ car.brand.name }}%20{{ car.model }}"
+            target="_blank"
+            class="btn btn-success"
+          >
+            Написати у WhatsApp
+          </a>
+        </p>
       </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+  </div>
+</div>
+{% endif %} {% endblock %}

@@ -11,7 +11,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("cars/", include("cars.urls")),
     path('register/', user_views.register_user, name='register_user'),
-    path('users/', include('user.urls')),
+    path('users/', include('user.urls',)),
     path('', car_views.car_list, name='car_list'),
 
 ]

@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}Мои авто{% endblock %} {% block
+content %}
+<h2 class="mb-4">Мои авто</h2>
+
+{% if cars %}
+<div class="row">
+  {% for car in cars %}
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card h-100 shadow-sm">
+      {% if car.photos.first %}
+      <img
+        src="{{ car.photos.first.image.url }}"
+        class="card-img-top"
+        alt="{{ car.model }}"
+        style="height: 200px; object-fit: cover"
+      />
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">
+          {{ car.brand.name }} {{ car.model }} ({{ car.year }})
+        </h5>
+        <p class="card-text">
+          <strong>Цена:</strong> {{ car.price }} EUR<br />
+          <strong>Пробег:</strong> {{ car.mileage|default:"—" }} км<br />
+          <strong>Статус:</strong> {{ car.get_status_display }}
+        </p>
+        <a href="{% url 'cars:car_detail' car.pk %}" class="btn btn-primary">
+          Подробнее
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+  У вас пока нет добавленных авто.
+</div>
+{% endif %} { % endblock % }

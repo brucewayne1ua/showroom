@@ -79,3 +79,9 @@ def car_add(request):
     else:
         form = CarForm()
     return render(request, 'cars/car_add.html', {'form': form})
+
+
+@login_required(login_url='login_user')
+def my_cars(request):
+    cars = Car.objects.filter(owner=request.user)
+    return render(request, 'cars/my_cars.html', {'cars': cars})
